@@ -1,0 +1,17 @@
+# Build artifacts
+target/
+Frontend/dist/
+Frontend/node_modules/
+
+# Version control
+.git/
+.github/
+
+# IDE settings
+.vscode/
+.idea/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
