@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Eye, EyeOff } from 'lucide-react';
 
 const LoginForms = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
@@ -46,10 +47,10 @@ const LoginForms = ({ onLoginSuccess }) => {
               />
               <button 
                 type="button" 
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-bold text-[#4f46e5] hover:text-[#4338ca] transition-colors cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#4f46e5] transition-colors cursor-pointer"
                 onClick={() => setShowPassword(!showPassword)}
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
               </button>
             </div>
           </div>
