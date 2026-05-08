@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+} from "react-router-dom";
 import AgentDashboard from "./components/AgentDashboard";
 import AdminDashboard from "./components/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -14,25 +20,25 @@ function App() {
       <div className="min-h-screen bg-gray-50">
         <Routes>
           <Route path="/login" element={<LoginScreen />} />
-          
-          <Route 
-            path="/agent" 
+
+          <Route
+            path="/agent"
             element={
               <ProtectedRoute role="AGENT">
                 <AgentDashboard />
               </ProtectedRoute>
-            } 
+            }
           />
-          
-          <Route 
-            path="/admin" 
+
+          <Route
+            path="/admin"
             element={
               <ProtectedRoute role="ADMIN">
                 <AdminDashboard />
               </ProtectedRoute>
-            } 
+            }
           />
-          
+
           <Route path="/" element={<Navigate to="/login" replace />} />
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
@@ -62,10 +68,12 @@ const LoginScreen = () => {
     e.preventDefault();
     setLoading(true);
     setError("");
-    
+
     try {
       const data = await authService.login(email, password);
-      const role = data.role ? data.role.toUpperCase().replace("ROLE_", "") : "";
+      const role = data.role
+        ? data.role.toUpperCase().replace("ROLE_", "")
+        : "";
       if (role === "ADMIN") {
         navigate("/admin");
       } else if (role === "AGENT") {
@@ -83,14 +91,21 @@ const LoginScreen = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-[#1a1c23] to-[#4f46e5] p-4">
-      <form 
-        className="bg-white p-8 md:p-10 rounded-2xl shadow-2xl w-full max-w-md text-center" 
-        onSubmit={handleSubmit}
-      >
-        <h2 className="text-[#4f46e5] mb-2 text-3xl font-bold tracking-tight">Collector Pro</h2>
-        <p className="text-gray-600 mb-6 font-medium">Please sign in to your account</p>
+      <form
+        className="bg-white p-8 md:p-10 rounded-2xl shadow-2xl w-full max-w-md text-center"
+        onSubmit={handleSubmit}>
+        <h2 className="text-[#4f46e5] mb-2 text-3xl font-bold tracking-tight">
+          Collector Pro
+        </h2>
+        <p className="text-gray-600 mb-6 font-medium">
+          Please sign in to your account
+        </p>
 
-        {error && <div className="mb-4 text-red-500 text-sm font-bold bg-red-50 p-2 rounded">{error}</div>}
+        {error && (
+          <div className="mb-4 text-red-500 text-sm font-bold bg-red-50 p-2 rounded">
+            {error}
+          </div>
+        )}
 
         <input
           type="email"
@@ -112,17 +127,15 @@ const LoginScreen = () => {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#4f46e5] transition-colors"
-          >
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#4f46e5] transition-colors">
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
           </button>
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           disabled={loading}
-          className={`w-full p-3.5 ${loading ? 'bg-gray-400' : 'bg-[#4f46e5]'} text-white rounded-lg font-bold mt-4 cursor-pointer hover:bg-[#4338ca] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg`}
-        >
+          className={`w-full p-3.5 ${loading ? "bg-gray-400" : "bg-[#4f46e5]"} text-white rounded-lg font-bold mt-4 cursor-pointer hover:bg-[#4338ca] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg`}>
           {loading ? "Signing In..." : "Sign In"}
         </button>
       </form>

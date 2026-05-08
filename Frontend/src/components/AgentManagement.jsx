@@ -348,7 +348,7 @@ const AgentManagement = () => {
                             </p>
                             <p className="text-xs font-medium text-slate-400 mt-0.5">
                               {/* #{ag.agentId} */}
-                               &bull; {ag.lastLocationName}
+                              &bull; {ag.lastLocationName}
                             </p>
                           </div>
                           <div
@@ -577,8 +577,7 @@ const AgentManagement = () => {
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-violet-600 transition-colors"
-                    >
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-violet-600 transition-colors">
                       {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                   </div>

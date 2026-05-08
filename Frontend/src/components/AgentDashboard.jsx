@@ -29,6 +29,7 @@ const AgentDashboard = () => {
 
         // Fetch transaction history
         const transRes = await api.get("/transactions");
+        console.log("Transactions: ", transRes.data);
         setTransactions(transRes.data);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
@@ -61,13 +62,13 @@ const AgentDashboard = () => {
         (error) => {
           console.error("Error obtaining geolocation:", error.message);
         },
-        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+        { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 },
       );
     };
 
     // Initial update
     updateLocation();
-    
+
     // Periodic updates every 60 seconds
     locationInterval = setInterval(updateLocation, 60000);
 
@@ -81,40 +82,82 @@ const AgentDashboard = () => {
     navigate("/login");
   };
 
-  const miniHistory = (transactions || []).slice(0, 3).map((t) => ({
-    date: t.transactionDate
-      ? new Date(t.transactionDate).toLocaleString()
-      : "N/A",
-    description:
-      t.description || `${t.entryType === "credit" ? "Deposit" : "Withdrawal"}`,
-    clientName: t.clientName || "Unknown Client",
-    accountNumber: t.accountNumber || "N/A",
-    type:
-      t.type || (t.entryType === "credit" ? "Susu Collection" : "Repayment"),
-    amount:
-      t.entryType === "debit"
-        ? -Math.abs(parseFloat(t.amount || 0))
-        : parseFloat(t.amount || 0),
-    status: t.status,
-  }));
+  const miniHistory = Array.isArray(transactions)
+    ? transactions.slice(0, 3).map((t) => ({
+        date: t.transactionDate
+          ? new Date(t.transactionDate).toLocaleString()
+          : "N/A",
+        description:
+          t.description ||
+          `${t.entryType === "credit" ? "Deposit" : "Withdrawal"}`,
+        clientName: t.clientName || "Unknown Client",
+        accountNumber: t.accountNumber || "N/A",
+        type:
+          t.type ||
+          (t.entryType === "credit" ? "Susu Collection" : "Repayment"),
+        amount:
+          t.entryType === "debit"
+            ? -Math.abs(parseFloat(t.amount || 0))
+            : parseFloat(t.amount || 0),
+        status: t.status,
+      }))
+    : null;
 
-  const formattedTransactions = (transactions || []).map((t) => ({
-    date: t.transactionDate
-      ? new Date(t.transactionDate).toLocaleString()
-      : "N/A",
-    description:
-      t.description ||
-      `${t.entryType === "credit" ? "Cash Deposit" : "Cash Withdrawal"}`,
-    clientName: t.clientName || "Unknown Client",
-    accountNumber: t.accountNumber || "N/A",
-    type:
-      t.type || (t.entryType === "credit" ? "Susu Collection" : "Withdrawal"),
-    amount:
-      t.entryType === "debit"
-        ? -Math.abs(parseFloat(t.amount || 0)) // Withdrawals are negative
-        : parseFloat(t.amount || 0),
-    status: t.status,
-  }));
+  // const miniHistory = (transactions || []).slice(0, 3).map((t) => ({
+  //   date: t.transactionDate
+  //     ? new Date(t.transactionDate).toLocaleString()
+  //     : "N/A",
+  //   description:
+  //     t.description || `${t.entryType === "credit" ? "Deposit" : "Withdrawal"}`,
+  //   clientName: t.clientName || "Unknown Client",
+  //   accountNumber: t.accountNumber || "N/A",
+  //   type:
+  //     t.type || (t.entryType === "credit" ? "Susu Collection" : "Repayment"),
+  //   amount:
+  //     t.entryType === "debit"
+  //       ? -Math.abs(parseFloat(t.amount || 0))
+  //       : parseFloat(t.amount || 0),
+  //   status: t.status,
+  // }));
+
+  const formattedTransactions = Array.isArray(transactions)
+    ? transactions.map((t) => ({
+        date: t.transactionDate
+          ? new Date(t.transactionDate).toLocaleString()
+          : "N/A",
+        description:
+          t.description ||
+          `${t.entryType === "credit" ? "Cash Deposit" : "Cash Withdrawal"}`,
+        clientName: t.clientName || "Unknown Client",
+        accountNumber: t.accountNumber || "N/A",
+        type:
+          t.type ||
+          (t.entryType === "credit" ? "Susu Collection" : "Withdrawal"),
+        amount:
+          t.entryType === "debit"
+            ? -Math.abs(parseFloat(t.amount || 0)) // Withdrawals are negative
+            : parseFloat(t.amount || 0),
+        status: t.status,
+      }))
+    : null;
+
+  // const formattedTransactions = (transactions || []).map((t) => ({
+  //   date: t.transactionDate
+  //     ? new Date(t.transactionDate).toLocaleString()
+  //     : "N/A",
+  //   description:
+  //     t.description ||
+  //     `${t.entryType === "credit" ? "Cash Deposit" : "Cash Withdrawal"}`,
+  //   clientName: t.clientName || "Unknown Client",
+  //   accountNumber: t.accountNumber || "N/A",
+  //   type:
+  //     t.type || (t.entryType === "credit" ? "Susu Collection" : "Withdrawal"),
+  //   amount:
+  //     t.entryType === "debit"
+  //       ? -Math.abs(parseFloat(t.amount || 0)) // Withdrawals are negative
+  //       : parseFloat(t.amount || 0),
+  //   status: t.status,
+  // }));
 
   const handleActionComplete = async () => {
     setActiveView("home");
@@ -123,7 +166,7 @@ const AgentDashboard = () => {
     try {
       const [profileRes, transRes] = await Promise.all([
         api.get(`/auth/me?t=${Date.now()}`),
-        api.get("/transactions")
+        api.get("/transactions"),
       ]);
       setUserProfile(profileRes.data);
       setTransactions(transRes.data);
